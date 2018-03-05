@@ -16,7 +16,7 @@ svg.append('text')
 
 var dayPadding = 0;
 var dayWidth = width / 7 - dayPadding * 2;
-var dayHeight = (height - barH) / 6;
+var dayHeight = (calH) / 6;
 
 // day names in the bar
 Object.keys(dayDict).forEach(function (d) {
@@ -70,11 +70,10 @@ dayG.each(function (i) {
 //    .attr('width', dayWidth)
 //    .attr('height', dayHeight);
 
-var gridT = 1;
 for (i = 1; i < 7; i += 2) {
     svg.append('rect')
         .attr('class', 'monthly gridlines')
         .attr('transform', 'translate(' + [dayWidth * i + gridT / 2, barH - gridT] + ')')
         .attr('width', dayWidth + gridT)
-        .attr('height', height - barH + padding.b);
+        .attr('height', calH + padding.b);
 }

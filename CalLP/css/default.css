@@ -1,4 +1,6 @@
-﻿body {
+﻿@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:300,500') 
+
+body {
   /* Uncomment this to enable scrolling and zooming
   touch-action: manipulation;
   */
@@ -71,4 +73,9 @@
     stroke: gray;
     stroke-width: 0.1;
     fill: none;
+}
+
+.curtime.line {
+    stroke: red;
+    stroke-width: 0.2;
 }

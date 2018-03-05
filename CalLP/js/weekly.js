@@ -9,16 +9,15 @@ svg.append('text')
     .style('alignment-baseline', 'hanging');
 
 var dayWidth = width / 7;
-var gridT = 1;
 for (i = 1; i < 7; i += 2) {
     svg.append('rect')
         .attr('class', 'weekly gridlines')
         .attr('transform', 'translate(' + [dayWidth * i + gridT / 2, barH - gridT] + ')')
         .attr('width', dayWidth + gridT)
-        .attr('height', height - barH + padding.b);
+        .attr('height', calH + padding.b);
 }
 
-var hourH = (height - barH) / 24;
+var hourH = (calH) / 24;
 for (i = 1; i < 24; i += 2) {
     svg.append('rect')
         .attr('class', 'weekly timelines')

@@ -9,7 +9,7 @@ svg.append('text')
     .style('text-anchor', 'start')
     .style('alignment-baseline', 'hanging');
 
-var dayCellH = (height - barH) / 31;
+var dayCellH = calH / 31;
 var dayCellW = width / 12;
 Object.keys(monthDict).forEach(function (m) {
     var days = Array.from(new Array(monthDayDict[m]), (x, i) => i+1);

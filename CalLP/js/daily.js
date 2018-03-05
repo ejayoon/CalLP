@@ -14,7 +14,6 @@ svg.append('rect')
     .attr('width', width/2 + gridT)
     .attr('height', height - barH + gridT);
 
-var hourH = (height - barH) / 24;
 for (i = 1; i < 24; i += 2) {
     svg.append('rect')
         .attr('class', 'weekly timelines')
