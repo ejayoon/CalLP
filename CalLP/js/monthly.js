@@ -1,46 +1,10 @@
-﻿var svg = d3.select('#monthlyCal');
-var marginLR = 0;
-var marginTB = 0;
-var width = 240;
-var height = width * 4 / 3;
-svg.attr('viewBox', marginLR + " " + marginTB + " " + width + " " + height);
-//var width = +svg.attr('width');
-//var height = +svg.attr('height');
+﻿//var svg = d3.select('#monthlyCal');
+//var marginLR = 0;
+//var marginTB = 0;
+//var width = 240;
+//var height = width * 4 / 3;
 
-var p = width / 50;
-var padding = { l: p, r: p, t: p, b: p };
-
-var dateInfo = new Date();
-var dayDict = { 0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday' };
-function Month(num, name, enddate) {
-    this.num = num;
-    this.name = name;
-    this.enddate = enddate;
-}
-
-var monthDict = {
-    1: 'January', 2: 'Feburary', 3: 'March', 4: 'April', 5: 'May', 6: 'June',
-    7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'
-}
-var calInfo = {
-    day: dayDict[dateInfo.getDay()],
-    date: dateInfo.getDate(),
-    month: dateInfo.getMonth() + 1,
-    monthStr: monthDict[dateInfo.getMonth() + 1],
-    year: dateInfo.getFullYear()
-}
-
-svg.append('rect')
-    .attr('transform', 'translate(0, 0)')
-    .style('width', width)
-    .style('height', height)
-    .style('fill', '#ECE2D0');
-
-svg.append('rect')
-    .attr('transform', 'translate(0, 0)')
-    .style('width', width)
-    .style('height', height/8)
-    .style('fill', 'black');
+var svg = svgs['svgM'];
 
 svg.append('text')
     .attr('transform', 'translate(' + [padding.l, padding.t] + ')')
@@ -50,20 +14,67 @@ svg.append('text')
     .style('text-anchor', 'front')
     .style('alignment-baseline', 'hanging');
 
-var days = Array.from(new Array(42), (x, i) => i);
 var dayPadding = 0;
 var dayWidth = width / 7 - dayPadding * 2;
-var dayHeight = height * 7/8 / 6;
-var dayBeginH = height/8;
-svg.append('g')
+var dayHeight = (height - barH) / 6;
+
+// day names in the bar
+Object.keys(dayDict).forEach(function (d) {
+    svg.append('text')
+        .attr('class', 'monthly dayname')
+        .attr('transform', function () {
+            return 'translate(' + [dayWidth * (d) + dayWidth/2, barH - padding.b] + ')';
+        })
+        .text(dayDict[d].substring(0, 3));
+});
+
+
+var startDay = firstD[calInfo.month].getDay();
+var days = Array.from(new Array(42), (x, i) => i);
+
+var dayG = svg.append('g')
     .attr('class', 'days-group')
     .selectAll('.monthly-day')
     .data(days)
     .enter()
-    .append('rect')
-    .attr('class', 'monthly-day')
+    .append('g')
+    .attr('class', 'monthly day')
     .attr('transform', function (i) {
-        return 'translate(' + [dayWidth * (i % 7) + dayPadding * (1 + (i % 7) * 2), (dayHeight + dayPadding*2) * (Math.floor(i / 7)) + dayBeginH] + ')';
-    })
-    .attr('width', dayWidth)
-    .attr('height', dayHeight);
+        return 'translate(' + [dayWidth * (i % 7) + dayPadding * (1 + (i % 7) * 2), (dayHeight + dayPadding * 2) * (Math.floor(i / 7)) + barH] + ')';
+    });
+
+dayG.each(function (i) {
+    var curI = i - startDay;
+    var txt = i - startDay + 1;
+    var gClass = ''
+    if (curI < 0) {
+        txt = monthDayDict[calInfo.month - 1] + curI;
+        gClass = ' notcur'
+    } else if (curI >= monthDayDict[calInfo.month]) {
+        txt = i - startDay - monthDayDict[calInfo.month] + 1;
+        gClass = ' notcur'
+    }
+
+    var dayn = dayDict[i % 7];
+
+    d3.select(this).append('text')
+        .attr('class', 'monthly day date ' + dayn + gClass)
+        .attr('transform', 'translate(' + [p, p] + ')')
+        .text(txt);
+});
+
+
+//dayG.append('rect')
+//    .attr('class', 'monthly day gridlines')
+//    .attr('transform', 'translate(0, 0)')
+//    .attr('width', dayWidth)
+//    .attr('height', dayHeight);
+
+var gridT = 1;
+for (i = 1; i < 7; i += 2) {
+    svg.append('rect')
+        .attr('class', 'monthly gridlines')
+        .attr('transform', 'translate(' + [dayWidth * i + gridT / 2, barH - gridT] + ')')
+        .attr('width', dayWidth + gridT)
+        .attr('height', height - barH + padding.b);
+}
